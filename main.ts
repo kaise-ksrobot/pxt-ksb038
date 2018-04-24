@@ -1,7 +1,7 @@
 /**
  * KSB038
  */
-//% weight=10 color=#0000f0 icon="\uf3bc" block="KSB038"
+//% weight=10 color=#0000f0 icon="\uf085" block="KSB038"
 namespace KSB038 {
     let _DEBUG: boolean = false
     const debug = (msg: string) => {
