@@ -2,7 +2,7 @@
  * KSB038
  */
  
-//% weight=10 color=#0000fa icon="\uf032"
+//% weight=10 color=#0000fa icon="\uf17b"
 namespace KSB038 {
     let _DEBUG: boolean = false
     const debug = (msg: string) => {
