@@ -1,9 +1,8 @@
 /**
- * KSB038 V0.001
+ * PCA9685
  */
- 
-//% weight=10 color=#0000fa icon="\uf17b"
-namespace KSB038 {
+//% weight=100 color=#0fbc11 icon=""
+namespace PCA9685 {
     let _DEBUG: boolean = false
     const debug = (msg: string) => {
         if (_DEBUG === true) {
@@ -32,6 +31,93 @@ namespace KSB038 {
     const channel0OffStepLowByte = 0x08 // LED0_OFF_L
     const channel0OffStepHighByte = 0x09 // LED0_OFF_H
 
+    const hexChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
+
+    /*
+        export enum HexValue {
+            h0 = 0,
+            h1 = 1,
+            h2 = 2,
+            h3 = 3,
+            h4 = 4,
+            h5 = 5,
+            h6 = 6,
+            h7 = 7,
+            h8 = 8,
+            h9 = 9,
+            hA = 10,
+            hB = 11,
+            hC = 12,
+            hD = 13,
+            hE = 14,
+            hF = 15
+        }
+
+        export enum ChipAddress {
+            hex_0x40 = 0x40,
+            hex_0x41 = 0x41,
+            hex_0x42 = 0x42,
+            hex_0x43 = 0x43,
+            hex_0x44 = 0x44,
+            hex_0x45 = 0x45,
+            hex_0x46 = 0x46,
+            hex_0x47 = 0x47,
+            hex_0x48 = 0x48,
+            hex_0x49 = 0x49,
+            hex_0x4A = 0x4A,
+            hex_0x4B = 0x4B,
+            hex_0x4C = 0x4C,
+            hex_0x4D = 0x4D,
+            hex_0x4E = 0x4E,
+            hex_0x4F = 0x4F,
+            hex_0x50 = 0x50,
+            hex_0x51 = 0x51,
+            hex_0x52 = 0x52,
+            hex_0x53 = 0x53,
+            hex_0x54 = 0x54,
+            hex_0x55 = 0x55,
+            hex_0x56 = 0x56,
+            hex_0x57 = 0x57,
+            hex_0x58 = 0x58,
+            hex_0x59 = 0x59,
+            hex_0x5A = 0x5A,
+            hex_0x5B = 0x5B,
+            hex_0x5C = 0x5C,
+            hex_0x5D = 0x5D,
+            hex_0x5E = 0x5E,
+            hex_0x5F = 0x5F,
+            hex_0x60 = 0x60,
+            hex_0x61 = 0x61,
+            hex_0x62 = 0x62,
+            hex_0x63 = 0x63,
+            hex_0x64 = 0x64,
+            hex_0x65 = 0x65,
+            hex_0x66 = 0x66,
+            hex_0x67 = 0x67,
+            hex_0x68 = 0x68,
+            hex_0x69 = 0x69,
+            hex_0x6A = 0x6A,
+            hex_0x6B = 0x6B,
+            hex_0x6C = 0x6C,
+            hex_0x6D = 0x6D,
+            hex_0x6E = 0x6E,
+            hex_0x6F = 0x6F,
+            hex_0x70 = 0x70,
+            hex_0x71 = 0x71,
+            hex_0x72 = 0x72,
+            hex_0x73 = 0x73,
+            hex_0x74 = 0x74,
+            hex_0x75 = 0x75,
+            hex_0x76 = 0x76,
+            hex_0x77 = 0x77,
+            hex_0x78 = 0x78,
+            hex_0x79 = 0x79,
+            hex_0x7A = 0x7A,
+            hex_0x7B = 0x7B,
+            hex_0x7C = 0x7C,
+            hex_0x7D = 0x7D,
+        }
+    */
 
     export enum PinNum {
         Pin0 = 0,
@@ -71,7 +157,24 @@ namespace KSB038 {
         Servo16 = 16,
     }
 
-
+    export enum LEDNum {
+        LED1 = 1,
+        LED2 = 2,
+        LED3 = 3,
+        LED4 = 4,
+        LED5 = 5,
+        LED6 = 6,
+        LED7 = 7,
+        LED8 = 8,
+        LED9 = 9,
+        LED10 = 10,
+        LED11 = 11,
+        LED12 = 12,
+        LED13 = 13,
+        LED14 = 14,
+        LED15 = 15,
+        LED16 = 16,
+    }
 
     export class ServoConfigObject {
         id: number;
@@ -202,6 +305,51 @@ namespace KSB038 {
         return ((offset * 1000) / (1000 / freq) * chipResolution) / 10000
     }
 
+    /**
+     * Used to set the pulse range (0-4095) of a given pin on the PCA9685
+     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     * @param pinNumber The pin number (0-15) to set the pulse range on
+     * @param onStep The range offset (0-4095) to turn the signal on
+     * @param offStep The range offset (0-4095) to turn the signal off
+     */
+    //% block advanced=true
+    export function setPinPulseRange(pinNumber: PinNum = 0, onStep: number = 0, offStep: number = 2048, chipAddress: number = 0x40): void {
+        pinNumber = Math.max(0, Math.min(15, pinNumber))
+        const buffer = pins.createBuffer(2)
+        const pinOffset = PinRegDistance * pinNumber
+        onStep = Math.max(0, Math.min(4095, onStep))
+        offStep = Math.max(0, Math.min(4095, offStep))
+
+        debug(`setPinPulseRange(${pinNumber}, ${onStep}, ${offStep}, ${chipAddress})`)
+        debug(`  pinOffset ${pinOffset}`)
+
+        // Low byte of onStep
+        write(chipAddress, pinOffset + channel0OnStepLowByte, onStep & 0xFF)
+
+        // High byte of onStep
+        write(chipAddress, pinOffset + channel0OnStepHighByte, (onStep >> 8) & 0x0F)
+
+        // Low byte of offStep
+        write(chipAddress, pinOffset + channel0OffStepLowByte, offStep & 0xFF)
+
+        // High byte of offStep
+        write(chipAddress, pinOffset + channel0OffStepHighByte, (offStep >> 8) & 0x0F)
+    }
+
+    /**
+     * Used to set the duty cycle (0-100) of a given led connected to the PCA9685
+     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     * @param ledNumber The number (1-16) of the LED to set the duty cycle on
+     * @param dutyCycle The duty cycle (0-100) to set the LED to
+     */
+    //% block
+    export function setLedDutyCycle(ledNum: LEDNum = 1, dutyCycle: number, chipAddress: number = 0x40): void {
+        ledNum = Math.max(1, Math.min(16, ledNum))
+        dutyCycle = Math.max(0, Math.min(100, dutyCycle))
+        const pwm = (dutyCycle * (chipResolution - 1)) / 100
+        debug(`setLedDutyCycle(${ledNum}, ${dutyCycle}, ${chipAddress})`)
+        return setPinPulseRange(ledNum - 1, 0, pwm, chipAddress)
+    }
 
     function degrees180ToPWM(freq: number, degrees: number, offsetStart: number, offsetEnd: number): number {
         // Calculate the offset of the off point in the freq
@@ -214,8 +362,8 @@ namespace KSB038 {
     }
 
     /**
-     * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
-     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
+     * Used to move the given servo to the specified degrees (0-180) connected to the PCA9685
+     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
      * @param servoNum The number (1-16) of the servo to move
      * @param degrees The degrees (0-180) to move the servo to
      */
@@ -238,7 +386,7 @@ namespace KSB038 {
 
     /**
      * Used to set the rotation speed of a continous rotation servo from -100% to 100%
-     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
+     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
      * @param servoNum The number (1-16) of the servo to move
      * @param speed [-100-100] The speed (-100-100) to turn the servo at
      */
@@ -271,7 +419,83 @@ namespace KSB038 {
         return setPinPulseRange(servo.pinNumber, 0, pwm, chipAddress)
     }
 
+    /**
+     * Used to set the range in centiseconds (milliseconds * 10) for the pulse width to control the connected servo
+     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     * @param servoNum The number (1-16) of the servo to move; eg: 1
+     * @param minTimeCs The minimum centiseconds (0-1000) to turn the servo on; eg: 5
+     * @param maxTimeCs The maximum centiseconds (0-1000) to leave the servo on for; eg: 25
+     * @param midTimeCs The mid (90 degree for regular or off position if continuous rotation) for the servo; eg: 15
+     */
+    //% block advanced=true
+    export function setServoLimits(servoNum: ServoNum = 1, minTimeCs: number = 5, maxTimeCs: number = 2.5, midTimeCs: number = -1, chipAddress: number = 0x40): void {
+        const chip = getChipConfig(chipAddress)
+        servoNum = Math.max(1, Math.min(16, servoNum))
+        minTimeCs = Math.max(0, minTimeCs)
+        maxTimeCs = Math.max(0, maxTimeCs)
+        debug(`setServoLimits(${servoNum}, ${minTimeCs}, ${maxTimeCs}, ${chipAddress})`)
+        const servo: ServoConfig = chip.servos[servoNum - 1]
+        midTimeCs = midTimeCs > -1 ? midTimeCs : ((maxTimeCs - minTimeCs) / 2) + minTimeCs
+        debug(`midTimeCs ${midTimeCs}`)
+        return servo.setOffsetsFromFreq(minTimeCs, maxTimeCs, midTimeCs)
+    }
 
+    /**
+     * Used to setup the chip, will cause the chip to do a full reset and turn off all outputs.
+     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     * @param freq [40-1000] Frequency (40-1000) in hertz to run the clock cycle at; eg: 50
+     */
+    //% block advanced=true
+    export function init(chipAddress: number = 0x40, newFreq: number = 50) {
+        debug(`Init chip at address ${chipAddress} to ${newFreq}Hz`)
+        const buf = pins.createBuffer(2)
+        const freq = (newFreq > 1000 ? 1000 : (newFreq < 40 ? 40 : newFreq))
+        const prescaler = calcFreqPrescaler(freq)
+
+        write(chipAddress, modeRegister1, sleep)
+
+        write(chipAddress, PrescaleReg, prescaler)
+
+        write(chipAddress, allChannelsOnStepLowByte, 0x00)
+        write(chipAddress, allChannelsOnStepHighByte, 0x00)
+        write(chipAddress, allChannelsOffStepLowByte, 0x00)
+        write(chipAddress, allChannelsOffStepHighByte, 0x00)
+
+        write(chipAddress, modeRegister1, wake)
+
+        control.waitMicros(1000)
+        write(chipAddress, modeRegister1, restart)
+    }
+
+    /**
+     * Used to reset the chip, will cause the chip to do a full reset and turn off all outputs.
+     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     */
+    //% block
+    export function reset(chipAddress: number = 0x40): void {
+        return init(chipAddress, getChipConfig(chipAddress).freq);
+    }
+
+    /**
+     * Used to reset the chip, will cause the chip to do a full reset and turn off all outputs.
+     * @param hexAddress The hex address to convert to decimal; eg: 0x40
+     */
+    //% block
+    export function chipAddress(hexAddress: string): number {
+        hexAddress = stripHexPrefix(hexAddress)
+        let dec = 0
+        let lastidx = 0
+        let lastchar = 0
+        const l = Math.min(2, hexAddress.length)
+        for (let i = 0; i < l; i++) {
+            const char = hexAddress.charAt(i)
+            const idx = hexChars.indexOf(char)
+            const pos = l - i - 1
+            lastidx = pos
+            dec = dec + (idx * Math.pow(16, pos))
+        }
+        return dec
+    }
 
     export function setDebug(debugEnabled: boolean): void {
         _DEBUG = debugEnabled
