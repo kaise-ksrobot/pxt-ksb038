@@ -1,8 +1,8 @@
 /**
- * PCA9685
+ * KSB038
  */
-//% weight=100 color=#0fbc11 icon="\uf3bc"
-namespace PCA9685 {
+//% weight=10 color=#0000f0 icon="\uf3bc"
+namespace KSB038 {
     let _DEBUG: boolean = false
     const debug = (msg: string) => {
         if (_DEBUG === true) {
@@ -306,8 +306,8 @@ namespace PCA9685 {
     }
 
     /**
-     * Used to set the pulse range (0-4095) of a given pin on the PCA9685
-     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     * Used to set the pulse range (0-4095) of a given pin on the KSB038
+     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      * @param pinNumber The pin number (0-15) to set the pulse range on
      * @param onStep The range offset (0-4095) to turn the signal on
      * @param offStep The range offset (0-4095) to turn the signal off
@@ -337,8 +337,8 @@ namespace PCA9685 {
     }
 
     /**
-     * Used to set the duty cycle (0-100) of a given led connected to the PCA9685
-     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     * Used to set the duty cycle (0-100) of a given led connected to the KSB038
+     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      * @param ledNumber The number (1-16) of the LED to set the duty cycle on
      * @param dutyCycle The duty cycle (0-100) to set the LED to
      */
@@ -362,8 +362,8 @@ namespace PCA9685 {
     }
 
     /**
-     * Used to move the given servo to the specified degrees (0-180) connected to the PCA9685
-     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
+     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      * @param servoNum The number (1-16) of the servo to move
      * @param degrees The degrees (0-180) to move the servo to
      */
@@ -386,7 +386,7 @@ namespace PCA9685 {
 
     /**
      * Used to set the rotation speed of a continous rotation servo from -100% to 100%
-     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      * @param servoNum The number (1-16) of the servo to move
      * @param speed [-100-100] The speed (-100-100) to turn the servo at
      */
@@ -421,7 +421,7 @@ namespace PCA9685 {
 
     /**
      * Used to set the range in centiseconds (milliseconds * 10) for the pulse width to control the connected servo
-     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      * @param servoNum The number (1-16) of the servo to move; eg: 1
      * @param minTimeCs The minimum centiseconds (0-1000) to turn the servo on; eg: 5
      * @param maxTimeCs The maximum centiseconds (0-1000) to leave the servo on for; eg: 25
@@ -442,7 +442,7 @@ namespace PCA9685 {
 
     /**
      * Used to setup the chip, will cause the chip to do a full reset and turn off all outputs.
-     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      * @param freq [40-1000] Frequency (40-1000) in hertz to run the clock cycle at; eg: 50
      */
     //% block advanced=true
@@ -469,7 +469,7 @@ namespace PCA9685 {
 
     /**
      * Used to reset the chip, will cause the chip to do a full reset and turn off all outputs.
-     * @param chipAddress [64-125] The I2C address of your PCA9685; eg: 64
+     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      */
     //% block
     export function reset(chipAddress: number = 0x40): void {
