@@ -10,8 +10,7 @@ namespace KSB038 {
         }
     }
 
-    const MIN_CHIP_ADDRESS = 0x40
-    const MAX_CHIP_ADDRESS = MIN_CHIP_ADDRESS + 62
+
     const chipResolution = 4096;
     const PrescaleReg = 0xFE //the prescale register address
     const modeRegister1 = 0x00 // MODE1
@@ -159,7 +158,8 @@ namespace KSB038 {
         return str
     }
 
-    function write(chipAddress: number, register: number, value: number): void {
+    function write(register: number, value: number): void {
+        const chipAddress = 0x40
         const buffer = pins.createBuffer(2)
         buffer[0] = register
         buffer[1] = value
@@ -183,7 +183,30 @@ namespace KSB038 {
     function calcFreqOffset(freq: number, offset: number) {
         return ((offset * 1000) / (1000 / freq) * chipResolution) / 10000
     }
+    
+    function setPinPulseRange(pinNumber: PinNum = 0, onStep: number = 0, offStep: number = 2048): void {
+        pinNumber = Math.max(0, Math.min(15, pinNumber))
+        const chipAddress = 0x40
+        const buffer = pins.createBuffer(2)
+        const pinOffset = PinRegDistance * pinNumber
+        onStep = Math.max(0, Math.min(4095, onStep))
+        offStep = Math.max(0, Math.min(4095, offStep))
 
+        debug(`setPinPulseRange(${pinNumber}, ${onStep}, ${offStep}, ${chipAddress})`)
+        debug(`  pinOffset ${pinOffset}`)
+
+        // Low byte of onStep
+        write(chipAddress, pinOffset + channel0OnStepLowByte, onStep & 0xFF)
+
+        // High byte of onStep
+        write(chipAddress, pinOffset + channel0OnStepHighByte, (onStep >> 8) & 0x0F)
+
+        // Low byte of offStep
+        write(chipAddress, pinOffset + channel0OffStepLowByte, offStep & 0xFF)
+
+        // High byte of offStep
+        write(chipAddress, pinOffset + channel0OffStepHighByte, (offStep >> 8) & 0x0F)
+      }
    
 
     function degrees180ToPWM(freq: number, degrees: number, offsetStart: number, offsetEnd: number): number {
@@ -198,12 +221,12 @@ namespace KSB038 {
 
     /**
      * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
-     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      * @param servoNum The number (1-16) of the servo to move
      * @param degrees The degrees (0-180) to move the servo to
      */
     //% block
-    export function setServoPosition(servoNum: ServoNum = 1, degrees: number, chipAddress: number = 0x40): void {
+    export function setServoPosition(servoNum: ServoNum = 1, degrees: number): void {
+        const chipAddress = 0x40
         const chip = getChipConfig(chipAddress)
         servoNum = Math.max(1, Math.min(16, servoNum))
         degrees = Math.max(0, Math.min(180, degrees))
@@ -221,12 +244,12 @@ namespace KSB038 {
 
     /**
      * Used to set the rotation speed of a continous rotation servo from -100% to 100%
-     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      * @param servoNum The number (1-16) of the servo to move
      * @param speed [-100-100] The speed (-100-100) to turn the servo at
      */
     //% block
-    export function setCRServoPosition(servoNum: ServoNum = 1, speed: number, chipAddress: number = 0x40): void {
+    export function setCRServoPosition(servoNum: ServoNum = 1, speed: number): void {
+        const chipAddress = 0x40
         debug(`setCRServoPosition(${servoNum}, ${speed}, ${chipAddress})`)
         const chip = getChipConfig(chipAddress)
         const freq = chip.freq
@@ -257,11 +280,11 @@ namespace KSB038 {
 
     /**
      * Used to setup the chip, will cause the chip to do a full reset and turn off all outputs.
-     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      * @param freq [40-1000] Frequency (40-1000) in hertz to run the clock cycle at; eg: 50
      */
     //% block 
-    export function init(chipAddress: number = 0x40, newFreq: number = 50) {
+    export function init(newFreq: number = 50) {
+        const chipAddress = 0x40
         debug(`Init chip at address ${chipAddress} to ${newFreq}Hz`)
         const buf = pins.createBuffer(2)
         const freq = (newFreq > 1000 ? 1000 : (newFreq < 40 ? 40 : newFreq))
