@@ -284,8 +284,8 @@ namespace KSB038 {
      * @param degrees The degrees (0-180) to move the servo to
      */
     //% block
-    export function setServoPosition(servoNum: ServoNum = 1, degrees: number): void {
-        const chipAddress = 0x40
+    export function setServoPosition(servoNum: ServoNum = 1, degrees: number,chipAddress: number = 0x40): void {
+        //const chipAddress = 0x40
         const chip = getChipConfig(chipAddress)
         servoNum = Math.max(1, Math.min(16, servoNum))
         degrees = Math.max(0, Math.min(180, degrees))
@@ -307,8 +307,8 @@ namespace KSB038 {
      * @param speed [-100-100] The speed (-100-100) to turn the servo at
      */
     //% block
-    export function setCRServoPosition(servoNum: ServoNum = 1, speed: number): void {
-        const chipAddress = 0x40
+    export function setCRServoPosition(servoNum: ServoNum = 1, speed: number,chipAddress: number = 0x40): void {
+        //const chipAddress = 0x40
         debug(`setCRServoPosition(${servoNum}, ${speed}, ${chipAddress})`)
         const chip = getChipConfig(chipAddress)
         const freq = chip.freq
