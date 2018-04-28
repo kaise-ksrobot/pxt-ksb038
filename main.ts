@@ -3,34 +3,33 @@
  */
 //% weight=10 color=#0000f0 icon="\uf085" block="KSB038"
 namespace KSB038 {
-    const PCA9685_ADDRESS = 0x40
+    const IIC_ADDRESS = 0x40
     const MODE1 = 0x00
-    const MODE2 = 0x01
-    const SUBADR1 = 0x02
-    const SUBADR2 = 0x03
-    const SUBADR3 = 0x04
     const PRESCALE = 0xFE
     const LED0_ON_L = 0x06
-    const LED0_ON_H = 0x07
-    const LED0_OFF_L = 0x08
-    const LED0_OFF_H = 0x09
-    const ALL_LED_ON_L = 0xFA
-    const ALL_LED_ON_H = 0xFB
-    const ALL_LED_OFF_L = 0xFC
-    const ALL_LED_OFF_H = 0xFD
+ 
 	
 
 	
-	export enum Servos {
-		S1 = 0x01,
-		S2 = 0x02,
-		S3 = 0x03,
-		S4 = 0x04,
-		S5 = 0x05,
-		S6 = 0x06,
-		S7 = 0x07,
-		S8 = 0x08
-	}
+    export enum ServoNum {
+        Servo1 = 1,
+        Servo2 = 2,
+        Servo3 = 3,
+        Servo4 = 4,
+        Servo5 = 5,
+        Servo6 = 6,
+        Servo7 = 7,
+        Servo8 = 8,
+        Servo9 = 9,
+        Servo10 = 10,
+        Servo11 = 11,
+        Servo12 = 12,
+        Servo13 = 13,
+        Servo14 = 14,
+        Servo15 = 15,
+        Servo16 = 16,
+    }
+
 	
 
     let initialized = false
@@ -39,16 +38,16 @@ namespace KSB038 {
 		let buf = pins.createBuffer(2)
         buf[0] = reg
         buf[1] = value
-        pins.i2cWriteBuffer(PCA9685_ADDRESS, buf)
+        pins.i2cWriteBuffer(IIC_ADDRESS, buf)
     }
 
 	function i2cread(reg: number){
-		pins.i2cWriteNumber(PCA9685_ADDRESS, reg, NumberFormat.UInt8BE);
-        let val = pins.i2cReadNumber(PCA9685_ADDRESS, NumberFormat.UInt8BE);
+		pins.i2cWriteNumber(IIC_ADDRESS, reg, NumberFormat.UInt8BE);
+        let val = pins.i2cReadNumber(IIC_ADDRESS, NumberFormat.UInt8BE);
         return val;
 	}
 
-    function initPCA9685(): void {
+    function init(): void {
 		i2cwrite(MODE1, 0x00)
         setFreq(50);
         initialized = true
@@ -80,7 +79,8 @@ namespace KSB038 {
         buf[2] = (on>>8) & 0xff;
         buf[3] = off & 0xff;
         buf[4] = (off>>8) & 0xff;
-        pins.i2cWriteBuffer(PCA9685_ADDRESS, buf);
+        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+        
 	}	
 
 	
@@ -89,14 +89,14 @@ namespace KSB038 {
 	//% blockGap=50
 	//% degree.min=0 degree.max=180
 	//% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
-	export function Servo(index: Servos, degree: number): void {
+	export function Servo(index: ServoNum, degree: number): void {
 		if(!initialized){
-			initPCA9685()
+			init()
 		}
 		// 50hz: 20,000 us
         let v_us = (degree*1800/180+600) // 0.6 ~ 2.4
         let value = v_us*4096/20000
-        setPwm(index+7, 0, value)
+        setPwm(index, 0, value)
     }
 	
 
