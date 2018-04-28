@@ -34,8 +34,7 @@ namespace KSB038 {
 	
 
     let initialized = false
-	  let neoStrip: neopixel.Strip;
-
+	
     function i2cwrite(reg: number, value: number) {
 		let buf = pins.createBuffer(2)
         buf[0] = reg
