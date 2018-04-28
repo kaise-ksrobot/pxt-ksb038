@@ -7,11 +7,9 @@ namespace KSB038 {
     const MODE1 = 0x00
     const PRESCALE = 0xFE
     const LED0_ON_L = 0x06
- 
-	
-
-	
+ 	
     export enum ServoNum {
+        Servo0 = 0,
         Servo1 = 1,
         Servo2 = 2,
         Servo3 = 3,
@@ -27,10 +25,9 @@ namespace KSB038 {
         Servo13 = 13,
         Servo14 = 14,
         Servo15 = 15,
-        Servo16 = 16,
+        
     }
 
-	
 
     let initialized = false
 	
@@ -49,12 +46,8 @@ namespace KSB038 {
 
     function init(): void {
 		i2cwrite(MODE1, 0x00)
-        setFreq(50);
-        initialized = true
-    }
-	
-	function setFreq(freq: number): void {
-		// Constrain the frequency
+        let freq=50;
+        // Constrain the frequency
         let prescaleval = 25000000;
         prescaleval /= 4096;
         prescaleval /= freq;
@@ -67,36 +60,34 @@ namespace KSB038 {
         i2cwrite(MODE1, oldmode);
         control.waitMicros(5000);
         i2cwrite(MODE1, oldmode | 0xa1);
-	}
+        initialized = true
+    }
 	
-	function setPwm(channel: number, on: number, off: number): void {
-		if (channel < 0 || channel > 15)
-            return;
-
-        let buf = pins.createBuffer(5);
-        buf[0] = LED0_ON_L + 4 * channel;
-        buf[1] = on & 0xff;
-        buf[2] = (on>>8) & 0xff;
-        buf[3] = off & 0xff;
-        buf[4] = (off>>8) & 0xff;
-        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-        
-	}	
-
 	
-	//% blockId=robotbit_servo block="Servo|%index|degree %degree"
-	//% weight=100
-	//% blockGap=50
-	//% degree.min=0 degree.max=180
-	//% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
-	export function Servo(index: ServoNum, degree: number): void {
+	/**
+     * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
+     * @param servoNum The number (1-16) of the servo to move
+     * @param degrees The degrees (0-180) to move the servo to
+     */
+    //% block 
+	export function Servo(channel: ServoNum, degree: number): void {
 		if(!initialized){
 			init()
 		}
 		// 50hz: 20,000 us
         let v_us = (degree*1800/180+600) // 0.6 ~ 2.4
         let value = v_us*4096/20000
-        setPwm(index, 0, value)
+        
+        if (channel < 0 || channel > 15)
+            return;
+
+        let buf = pins.createBuffer(5);
+        buf[0] = LED0_ON_L + 4 * channel;
+        buf[1] = 0;
+        buf[2] = (0>>8);
+        buf[3] = value & 0xff;
+        buf[4] = (value>>8) & 0xff;
+        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
     }
 	
 
