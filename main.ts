@@ -1,5 +1,5 @@
 /**
- * KSB038
+ * KSB038 V0.009
  */
 //% weight=10 color=#0000f0 icon="\uf085" block="KSB038"
 namespace KSB038 {
@@ -10,7 +10,7 @@ namespace KSB038 {
         }
     }
     
-
+    
     const MIN_CHIP_ADDRESS = 0x40
     const MAX_CHIP_ADDRESS = MIN_CHIP_ADDRESS + 62
     const chipResolution = 4096;
@@ -208,7 +208,7 @@ namespace KSB038 {
         for (let i = 0; i < chips.length; i++) {
             if (chips[i].address === address) {
                 debug(`Returning chip ${i}`)
-                return chips[i]
+                return chips[i] 
             }
         }
         debug(`Creating new chip for address ${address}`)
@@ -284,8 +284,8 @@ namespace KSB038 {
      * @param degrees The degrees (0-180) to move the servo to
      */
     //% block
-    export function setServoPosition(servoNum: ServoNum = 1, degrees: number,chipAddress: number = 0x40): void {
-        //const chipAddress = 0x40
+    export function setServoPosition(servoNum: ServoNum = 1, degrees: number): void {
+        const chipAddress = 60
         const chip = getChipConfig(chipAddress)
         servoNum = Math.max(1, Math.min(16, servoNum))
         degrees = Math.max(0, Math.min(180, degrees))
@@ -307,8 +307,8 @@ namespace KSB038 {
      * @param speed [-100-100] The speed (-100-100) to turn the servo at
      */
     //% block
-    export function setCRServoPosition(servoNum: ServoNum = 1, speed: number,chipAddress: number = 0x40): void {
-        //const chipAddress = 0x40
+    export function setCRServoPosition(servoNum: ServoNum = 1, speed: number): void {
+        const chipAddress = 60
         debug(`setCRServoPosition(${servoNum}, ${speed}, ${chipAddress})`)
         const chip = getChipConfig(chipAddress)
         const freq = chip.freq
