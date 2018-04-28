@@ -280,12 +280,12 @@ namespace KSB038 {
 
     /**
      * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
-     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      * @param servoNum The number (1-16) of the servo to move
      * @param degrees The degrees (0-180) to move the servo to
      */
     //% block
-    export function setServoPosition(servoNum: ServoNum = 1, degrees: number, chipAddress: number = 0x40): void {
+    export function setServoPosition(servoNum: ServoNum = 1, degrees: number): void {
+        const chipAddress = 0x40
         const chip = getChipConfig(chipAddress)
         servoNum = Math.max(1, Math.min(16, servoNum))
         degrees = Math.max(0, Math.min(180, degrees))
@@ -303,12 +303,12 @@ namespace KSB038 {
 
     /**
      * Used to set the rotation speed of a continous rotation servo from -100% to 100%
-     * @param chipAddress [64-125] The I2C address of your KSB038; eg: 64
      * @param servoNum The number (1-16) of the servo to move
      * @param speed [-100-100] The speed (-100-100) to turn the servo at
      */
     //% block
-    export function setCRServoPosition(servoNum: ServoNum = 1, speed: number, chipAddress: number = 0x40): void {
+    export function setCRServoPosition(servoNum: ServoNum = 1, speed: number): void {
+        const chipAddress = 0x40
         debug(`setCRServoPosition(${servoNum}, ${speed}, ${chipAddress})`)
         const chip = getChipConfig(chipAddress)
         const freq = chip.freq
@@ -364,6 +364,7 @@ namespace KSB038 {
      */
     //% block advanced=true
     export function init(chipAddress: number = 0x40, newFreq: number = 50) {
+        
         debug(`Init chip at address ${chipAddress} to ${newFreq}Hz`)
         const buf = pins.createBuffer(2)
         const freq = (newFreq > 1000 ? 1000 : (newFreq < 40 ? 40 : newFreq))
