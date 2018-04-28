@@ -2,7 +2,7 @@
  * KSB038
  */
 //% weight=10 color=#0000f0 icon="\uf085" block="KSB038"
-namespace PCA9685 {
+namespace KSB038 {
     let _DEBUG: boolean = false
     const debug = (msg: string) => {
         if (_DEBUG === true) {
