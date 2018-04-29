@@ -4,7 +4,7 @@
 //% weight=10 color=#0000f0 icon="\uf085" block="KSB038"
 namespace KSB038 {
     
-    const SERVOMIN = 102 // this is the 'minimum' pulse length count (out of 4096)
+    const SERVOMIN = 112 // this is the 'minimum' pulse length count (out of 4096)
     const SERVOMAX = 491 // this is the 'maximum' pulse length count (out of 4096)
     const IIC_ADDRESS = 0x40
     const MODE1 = 0x00
