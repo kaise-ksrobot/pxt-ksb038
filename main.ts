@@ -111,7 +111,7 @@ namespace KSB038 {
      * @param servomax 'maximum' pulse length count
      */
     //% block 
-	export function ServoRange(channel: ServoNum, degree: number, servomin: number=SERVOMIN, servomax: number=SERVOMAX): void {
+	export function ServoRange(channel: ServoNum, degree: number, servomin: number=112, servomax: number=491): void {
         
         if(!initialized){
 			init()
