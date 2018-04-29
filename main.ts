@@ -70,7 +70,39 @@ namespace KSB038 {
     {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
-	
+    /**
+     * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
+     * @param channel The number (1-16) of the servo to move
+     * @param degrees The degrees (0-180) to move the servo to
+     */
+    //% block 
+	export function Servo(channel: ServoNum, degree: number): void {
+        
+        if(!initialized){
+			init()
+		}
+		// 50hz: 20,000 us
+        //let servo_timing = (degree*1800/180+600) // 0.55 ~ 2.4
+        //let pulselen = servo_timing*4096/20000
+        //normal 0.5ms~2.4ms
+        //SG90 0.5ms~2.0ms
+
+        let pulselen = servo_map(degree, 0, 180, SERVOMIN, SERVOMAX);
+        //let pulselen = servo_map(degree, 0, 180, servomin, servomax);
+        
+        
+        if (channel < 0 || channel > 15)
+            return;
+
+        let buf = pins.createBuffer(5);
+        buf[0] = LED0_ON_L + 4 * channel;
+        buf[1] = 0;
+        buf[2] = (0>>8);
+        buf[3] = pulselen & 0xff;
+        buf[4] = (pulselen>>8) & 0xff;
+        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+    }
+    
 	/**
      * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
      * @param channel The number (1-16) of the servo to move
@@ -79,7 +111,7 @@ namespace KSB038 {
      * @param servomax 'maximum' pulse length count
      */
     //% block 
-	export function Servo(channel: ServoNum, degree: number, servomin: number, servomax: number): void {
+	export function ServoRange(channel: ServoNum, degree: number, servomin: number=SERVOMIN, servomax: number=SERVOMAX): void {
         
         if(!initialized){
 			init()
