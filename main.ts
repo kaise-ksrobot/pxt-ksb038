@@ -107,11 +107,11 @@ namespace KSB038 {
      * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
      * @param channel The number (1-16) of the servo to move
      * @param degrees The degrees (0-180) to move the servo to
-     * @param servomin 'minimum' pulse length count
-     * @param servomax 'maximum' pulse length count
+     * @param servomin 'minimum' pulse length count ; eg: 112
+     * @param servomax 'maximum' pulse length count ; eg: 491
      */
     //% block 
-	export function ServoRange(channel: ServoNum, degree: number, servomin: number=112, servomax: number=491): void {
+	export function ServoRange(channel: ServoNum, degree: number, servomin: number, servomax: number): void {
         
         if(!initialized){
 			init()
