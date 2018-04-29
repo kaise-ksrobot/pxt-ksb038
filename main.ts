@@ -4,8 +4,8 @@
 //% weight=10 color=#0000f0 icon="\uf085" block="KSB038"
 namespace KSB038 {
     
-    const SERVOMIN = 113 // this is the 'minimum' pulse length count (out of 4096)
-    const SERVOMAX = 600 // this is the 'maximum' pulse length count (out of 4096)
+    const SERVOMIN = 112 // this is the 'minimum' pulse length count (out of 4096)
+    const SERVOMAX = 491 // this is the 'maximum' pulse length count (out of 4096)
     const IIC_ADDRESS = 0x40
     const MODE1 = 0x00
     const PRESCALE = 0xFE
@@ -80,8 +80,10 @@ namespace KSB038 {
 			init()
 		}
 		// 50hz: 20,000 us
-        //let servo_timing = (degree*1800/180+600) // 0.6 ~ 2.4
+        //let servo_timing = (degree*1800/180+600) // 0.55 ~ 2.4
         //let pulselen = servo_timing*4096/20000
+        //normal 0.55ms~2.4ms
+        //SG90 0.5ms~2.0ms
 
         let pulselen = servo_map(degree, 0, 180, SERVOMIN, SERVOMAX);
         
