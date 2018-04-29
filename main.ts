@@ -6,8 +6,6 @@ namespace KSB038 {
     
     const SERVOMIN = 102 // this is the 'minimum' pulse length count (out of 4096)
     const SERVOMAX = 491 // this is the 'maximum' pulse length count (out of 4096)
-    const SG90_SERVOMIN = 102 // this is the 'minimum' pulse length count (out of 4096)
-    const SG90_SERVOMAX = 409 // this is the 'maximum' pulse length count (out of 4096)
     const IIC_ADDRESS = 0x40
     const MODE1 = 0x00
     const PRESCALE = 0xFE
@@ -37,17 +35,19 @@ namespace KSB038 {
     let initialized = false
 	
     function i2c_write(reg: number, value: number) {
-		let buf = pins.createBuffer(2)
+        
+        let buf = pins.createBuffer(2)
         buf[0] = reg
         buf[1] = value
         pins.i2cWriteBuffer(IIC_ADDRESS, buf)
     }
 
-	function i2c_read(reg: number){
-		pins.i2cWriteNumber(IIC_ADDRESS, reg, NumberFormat.UInt8BE);
+    function i2c_read(reg: number){
+        
+        pins.i2cWriteNumber(IIC_ADDRESS, reg, NumberFormat.UInt8BE);
         let val = pins.i2cReadNumber(IIC_ADDRESS, NumberFormat.UInt8BE);
         return val;
-	}
+    }
 
     function init(): void {
 		i2c_write(MODE1, 0x00)
@@ -55,8 +55,8 @@ namespace KSB038 {
         // Constrain the frequency
         let prescaleval = 25000000/4096/freq;
         prescaleval -= 1;
-        //let prescale = prescaleval; //Math.Floor(prescaleval + 0.5);
-        let prescale = 121;
+        let prescale = prescaleval; 
+        //let prescale = 121;
         let oldmode = i2c_read(MODE1);        
         let newmode = (oldmode & 0x7F) | 0x10; // sleep
         i2c_write(MODE1, newmode); // go to sleep
@@ -73,12 +73,15 @@ namespace KSB038 {
 	
 	/**
      * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
-     * @param servoNum The number (1-16) of the servo to move
+     * @param channel The number (1-16) of the servo to move
      * @param degrees The degrees (0-180) to move the servo to
+     * @param servomin 'minimum' pulse length count
+     * @param servomax 'maximum' pulse length count
      */
     //% block 
-	export function Servo(channel: ServoNum, degree: number): void {
-		if(!initialized){
+	export function Servo(channel: ServoNum, degree: number, servomin: number, servomax: number): void {
+        
+        if(!initialized){
 			init()
 		}
 		// 50hz: 20,000 us
@@ -87,8 +90,9 @@ namespace KSB038 {
         //normal 0.5ms~2.4ms
         //SG90 0.5ms~2.0ms
 
-        let pulselen = servo_map(degree, 0, 180, SERVOMIN, SERVOMAX);
-        //let pulselen = servo_map(degree, 0, 180, SG90_SERVOMIN, SG90_SERVOMAX);
+       // let pulselen = servo_map(degree, 0, 180, SERVOMIN, SERVOMAX);
+        let pulselen = servo_map(degree, 0, 180, servomin, servomax);
+        
         
         if (channel < 0 || channel > 15)
             return;
