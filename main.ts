@@ -105,8 +105,6 @@ namespace KSB038 {
     
 	/**
      * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
-     * servomin Servo_min_timing (ms)*1000*4096/20000 
-     * servomax Servo_max_timing (ms)*1000*4096/20000 
      * @param channel The number (1-16) of the servo to move
      * @param degrees The degrees (0-180) to move the servo to
      * @param servomin 'minimum' pulse length count ; eg: 112
@@ -121,8 +119,9 @@ namespace KSB038 {
 		// 50hz: 20,000 us
         //normal 0.5ms~2.4ms
         //SG90 0.5ms~2.0ms
-
-       // let pulselen = servo_map(degree, 0, 180, SERVOMIN, SERVOMAX);
+        // servomin Servo_min_timing (ms)*1000*4096/20000 
+        // servomax Servo_max_timing (ms)*1000*4096/20000 
+        // let pulselen = servo_map(degree, 0, 180, SERVOMIN, SERVOMAX);
         let pulselen = servo_map(degree, 0, 180, servomin, servomax);
         
         
