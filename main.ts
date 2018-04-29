@@ -6,6 +6,8 @@ namespace KSB038 {
     
     const SERVOMIN = 112 // this is the 'minimum' pulse length count (out of 4096)
     const SERVOMAX = 491 // this is the 'maximum' pulse length count (out of 4096)
+    const SG90_SERVOMIN = 102 // this is the 'minimum' pulse length count (out of 4096)
+    const SG90_SERVOMAX = 409 // this is the 'maximum' pulse length count (out of 4096)
     const IIC_ADDRESS = 0x40
     const MODE1 = 0x00
     const PRESCALE = 0xFE
@@ -85,7 +87,8 @@ namespace KSB038 {
         //normal 0.55ms~2.4ms
         //SG90 0.5ms~2.0ms
 
-        let pulselen = servo_map(degree, 0, 180, SERVOMIN, SERVOMAX);
+        //let pulselen = servo_map(degree, 0, 180, SERVOMIN, SERVOMAX);
+        let pulselen = servo_map(degree, 0, 180, SG90_SERVOMIN, SG90_SERVOMAX);
         
         if (channel < 0 || channel > 15)
             return;
