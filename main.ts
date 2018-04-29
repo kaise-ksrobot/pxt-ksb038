@@ -63,7 +63,7 @@ namespace KSB038 {
         i2c_write(PRESCALE, prescale); // set the prescaler
         i2c_write(MODE1, oldmode);
         control.waitMicros(5000);
-        i2c_write(MODE1, oldmode | 0xa1);
+        i2c_write(MODE1, oldmode | 0xa0);
         initialized = true
     }
 	function servo_map(x: number, in_min: number, in_max: number, out_min: number, out_max: number)
@@ -105,6 +105,8 @@ namespace KSB038 {
     
 	/**
      * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
+     * servomin Servo_min_timing (ms)*1000*4096/20000
+     * servomax Servo_max_timing (ms)*1000*4096/20000
      * @param channel The number (1-16) of the servo to move
      * @param degrees The degrees (0-180) to move the servo to
      * @param servomin 'minimum' pulse length count ; eg: 112
@@ -117,8 +119,6 @@ namespace KSB038 {
 			init()
 		}
 		// 50hz: 20,000 us
-        //let servo_timing = (degree*1800/180+600) // 0.55 ~ 2.4
-        //let pulselen = servo_timing*4096/20000
         //normal 0.5ms~2.4ms
         //SG90 0.5ms~2.0ms
 
