@@ -77,7 +77,7 @@ namespace KSB038 {
      * @param degrees The degrees (0-180) to move the servo to 
      */
     //% block 
-    //% block="channel %channel|degrees %degrees"
+    //% block="Servo channel %channel|degrees %degrees"
     //% degrees.min=0 degrees.max=180
 	export function Servo(channel: ServoNum, degree: number): void {
         
