@@ -114,7 +114,7 @@ namespace KSB038 {
      * @param servomax 'maximum' pulse length count ; eg: 491
      */
     //% blockId=KSB038_ServoRange
-    //% block="Servo Range|channel %channel|degrees %degrees|servomin %servomin|servomax %servomax"
+    //% block="Servo channel %channel|degrees %degrees|servomin %servomin|servomax %servomax"
     //% degrees.min=0 degrees.max=180
 	export function ServoRange(channel: ServoNum, degree: number, servomin: number, servomax: number): void {
         
