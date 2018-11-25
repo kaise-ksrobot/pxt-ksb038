@@ -32,6 +32,7 @@ namespace KSB038 {
     }
 
 
+
     let initialized = false
 	
     function i2c_write(reg: number, value: number) {
@@ -73,7 +74,7 @@ namespace KSB038 {
     /**
      * Used to move the given servo to the specified degrees (0-180) connected to the KSB038
      * @param channel The number (1-16) of the servo to move
-     * @param degrees The degrees (0-180) to move the servo to
+     * @param degrees The degrees (0-180) to move the servo to 
      */
     //% block 
     //% block="channel %channel|degrees %degrees"
