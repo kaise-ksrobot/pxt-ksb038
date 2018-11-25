@@ -1,7 +1,7 @@
 /**
  * KSB038 V0.010
  */
-//% weight=10 color=#0000f0 icon="\uf085" block="KSB038"
+//% weight=10 color=#0000A0 icon="\uf085" block="KSB038"
 namespace KSB038 {
     
     const SERVOMIN = 112 // this is the 'minimum' pulse length count (out of 4096)
@@ -76,7 +76,7 @@ namespace KSB038 {
      * @param channel The number (1-16) of the servo to move
      * @param degrees The degrees (0-180) to move the servo to 
      */
-    //% block 
+    //% blockId=KSB038_Servo
     //% block="Servo channel %channel|degrees %degrees"
     //% degrees.min=0 degrees.max=180
 	export function Servo(channel: ServoNum, degree: number): void {
@@ -113,7 +113,9 @@ namespace KSB038 {
      * @param servomin 'minimum' pulse length count ; eg: 112
      * @param servomax 'maximum' pulse length count ; eg: 491
      */
-    //% block 
+    //% blockId=KSB038_ServoRange
+    //% block="channel %channel|degrees %degrees|servomin %servomin|servomax %servomax"
+    //% degrees.min=0 degrees.max=180
 	export function ServoRange(channel: ServoNum, degree: number, servomin: number, servomax: number): void {
         
         if(!initialized){
