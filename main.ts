@@ -1,7 +1,7 @@
 /**
  * KSB038 V0.010
  */
-//% weight=10 color=#0064A0 icon="\uf085" block="KSB038"
+//% weight=10 color=#00A0F0 icon="\uf085" block="KSB038"
 namespace KSB038 {
     
     const SERVOMIN = 112 // this is the 'minimum' pulse length count (out of 4096)
