@@ -1,0 +1,6 @@
+{
+	"KSB038|block": "KSB038",
+    "KSB038.KSB038_Servo|block": "舵機 %channel|角度 %degree",
+    "KSB038.ServoRange|block": "舵機 %channel|角度 %degree|servomin %servomin|servomax %servomax"
+	
+}
