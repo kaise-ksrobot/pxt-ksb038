@@ -10,7 +10,7 @@
     },
     "files": [
         "main.ts",
-        "README.md"
+        "README.md",
         "_locales/zh/ksb038-strings.json" 
     ],
     "testFiles": [
