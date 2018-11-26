@@ -1,5 +1,5 @@
 {
-	"KSB038|block": "KSB038舵機板",
+	"KSB038|block": "KSB038 舵機板",
 	"KSB038.Servo|block": "舵機 %channel|角度 %degree",
 	"KSB038.ServoRange|block": "舵機 %channel|角度 %degree|servomin %servomin|servomax %servomax"
 	
