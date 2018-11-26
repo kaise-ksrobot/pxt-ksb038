@@ -1,6 +1,6 @@
 # KSB038
 KAISE KSRobot KSB038 micro:bit Servo Board
-KSB038 舵機擴展板
+舵機擴展板
 
 ## User Guide 
 
