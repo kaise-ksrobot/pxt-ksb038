@@ -77,8 +77,8 @@ namespace KSB038 {
      * @param degrees The degrees (0-180) to move the servo to 
      */
     //% blockId=KSB038_Servo
-    //% block="Servo channel %channel|degrees %degrees"
-    //% degrees.min=0 degrees.max=180
+    //% block="Servo channel %channel|degrees %degree"
+    //% degree.min=0 degree.max=180
 	export function Servo(channel: ServoNum, degree: number): void {
         
         if(!initialized){
@@ -114,8 +114,8 @@ namespace KSB038 {
      * @param servomax 'maximum' pulse length count ; eg: 491
      */
     //% blockId=KSB038_ServoRange
-    //% block="Servo channel %channel|degrees %degrees|servomin %servomin|servomax %servomax"
-    //% degrees.min=0 degrees.max=180
+    //% block="Servo channel %channel|degrees %degree|servomin %servomin|servomax %servomax"
+    //% degree.min=0 degree.max=180
 	export function ServoRange(channel: ServoNum, degree: number, servomin: number, servomax: number): void {
         
         if(!initialized){
