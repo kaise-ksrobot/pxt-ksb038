@@ -1,6 +1,6 @@
 {
     "name": "KSB038",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "Extension for KAISE KSRobot KSB038",
     "license": "MIT", 
     "dependencies": {
