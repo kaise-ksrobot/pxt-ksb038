@@ -11,6 +11,7 @@
         "main.ts",
         "README.md",
         "_locales/zh/KSB038-strings.json" 
+        
     ],
     "testFiles": [
       "tests.ts"
